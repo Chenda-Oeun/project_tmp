@@ -121,7 +121,7 @@ class AutoExportCommand extends Command {
       final preImports = [
         'package:flutter/material.dart',
         'package:flutter_riverpod/flutter_riverpod.dart',
-        'package:hive_flutter/hive_flutter.dart',
+        // 'package:hive_flutter/hive_flutter.dart',
       ];
       files.insertAll(0, preImports);
       exportFile = File(join(directory.path, 'export.dart'));

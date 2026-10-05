@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:project_tmp/data/providers/slow_network.dart';
-import 'package:project_tmp/utils/helper/accessors.dart';
-import 'package:project_tmp/utils/helper/general.dart';
+import 'package:project_tmp/utils/helpers/accessors.dart';
+import 'package:project_tmp/utils/helpers/general.dart';
 import 'package:project_tmp/utils/services/request_capture.dart' show CapturedAPIRequest;
 
 

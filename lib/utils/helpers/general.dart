@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 bool shouldCurrencyHaveDecimal({String? currencyKey}) {
@@ -122,5 +123,68 @@ Future callApi(
     //   hideLoading();
     print("COMPLETE");
     onComplete?.call();
+  }
+}
+
+
+
+num numFromDynamicJson(dynamic data) {
+  try {
+    final startNumRegEx = RegExp(r'^[0-9,]+(.[0-9,]+)?');
+    if (data is String) {
+      try {
+        return num.parse(data);
+      } catch (e, stackTrace) {
+        /// TODO Add capture api service
+        // ErrorCaptureService.putError(e, stack: stackTrace);
+        if (startNumRegEx.hasMatch(data)) {
+          return num.parse(
+              startNumRegEx.firstMatch(data)!.group(0)!.replaceAll(',', ''));
+        }
+        rethrow;
+      }
+    } else if (data is num) {
+      return data;
+    } else {
+      return 0;
+    }
+  } catch (e, stackTrace) {
+    /// TODO Add capture api service
+    // ErrorCaptureService.putError(e, stack: stackTrace);
+    return 0;
+  }
+}
+
+Color deserializeColor(dynamic colorData) {
+  try {
+    if (colorData is Color) {
+      return colorData;
+    } else if (colorData is String) {
+      var colorHex = colorData;
+      var noHash = colorData.replaceFirst(RegExp(r'^#'), '');
+      if (noHash.length == 8) {
+        colorHex = noHash.substring(6, 8) + noHash.substring(0, 6);
+      }
+      return Color(hexFromString(colorHex)).withOpacity(0.65);
+    } else if (colorData is int) {
+      return Color(colorData);
+    }
+    return Colors.black;
+  } catch (e, stackTrace) {
+    /// TODO Add capture api service
+    // ErrorCaptureService.putError(e, stack: stackTrace);
+    return Colors.transparent;
+  }
+}
+int hexFromString(String hexString) {
+  try {
+    return int.parse(
+      hexString.replaceFirst(RegExp(r'^#?(0[xX])?'), '').padLeft(8, 'F'),
+      radix: 16,
+    );
+  } catch (e, stackTrace) {
+    /// TODO Add capture api service
+    // ErrorCaptureService.putError(e, stack: stackTrace);
+    return 0;
   }
 }

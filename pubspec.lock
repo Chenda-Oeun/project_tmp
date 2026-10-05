@@ -757,6 +757,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.3"
+  scaled_app:
+    dependency: "direct main"
+    description:
+      name: scaled_app
+      sha256: "96b12fbfbf5a3a5066313f98124ada7995cb7234651dde79a29121fd75420053"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   shelf:
     dependency: transitive
     description:

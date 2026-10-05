@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_tmp/utils/helper/accessors.dart';
+import 'package:project_tmp/utils/helpers/accessors.dart';
 
 
 class RealSlowNetwork extends Notifier<bool> {

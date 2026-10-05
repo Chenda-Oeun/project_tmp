@@ -14,7 +14,7 @@ part of 'app_state.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$AppState {
+mixin _$AppState implements DiagnosticableTreeMixin {
 
 @HiveField(0) String? get accessToken;@HiveField(0) set accessToken(String? value);@HiveField(1)@JsonKey(fromJson: dateFromJson, toJson: dateToJson) DateTime? get tokenCreatedAt;@HiveField(1)@JsonKey(fromJson: dateFromJson, toJson: dateToJson) set tokenCreatedAt(DateTime? value);@HiveField(2) User? get user;@HiveField(2) set user(User? value);@HiveField(3) String? get refreshToken;@HiveField(3) set refreshToken(String? value);
 /// Create a copy of AppState
@@ -26,11 +26,18 @@ $AppStateCopyWith<AppState> get copyWith => _$AppStateCopyWithImpl<AppState>(thi
   /// Serializes this AppState to a JSON map.
   Map<String, dynamic> toJson();
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  final _this = this as AppState;
+  properties
+    ..add(DiagnosticsProperty('type', 'AppState'))
+    ..add(DiagnosticsProperty('accessToken', _this.accessToken))..add(DiagnosticsProperty('tokenCreatedAt', _this.tokenCreatedAt))..add(DiagnosticsProperty('user', _this.user))..add(DiagnosticsProperty('refreshToken', _this.refreshToken));
+}
 
 
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   final _this = this as AppState;
   return 'AppState(accessToken: ${_this.accessToken}, tokenCreatedAt: ${_this.tokenCreatedAt}, user: ${_this.user}, refreshToken: ${_this.refreshToken})';
 }
@@ -218,7 +225,7 @@ return $default(_that.accessToken,_that.tokenCreatedAt,_that.user,_that.refreshT
 /// @nodoc
 @JsonSerializable()
 
-class _AppState extends AppState {
+class _AppState extends AppState with DiagnosticableTreeMixin {
    _AppState({@HiveField(0) this.accessToken, @HiveField(1)@JsonKey(fromJson: dateFromJson, toJson: dateToJson) this.tokenCreatedAt, @HiveField(2) this.user, @HiveField(3) this.refreshToken}): super._();
   factory _AppState.fromJson(Map<String, dynamic> json) => _$AppStateFromJson(json);
 
@@ -237,11 +244,17 @@ _$AppStateCopyWith<_AppState> get copyWith => __$AppStateCopyWithImpl<_AppState>
 Map<String, dynamic> toJson() {
   return _$AppStateToJson(this, );
 }
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+    ..add(DiagnosticsProperty('type', 'AppState'))
+    ..add(DiagnosticsProperty('accessToken', accessToken))..add(DiagnosticsProperty('tokenCreatedAt', tokenCreatedAt))..add(DiagnosticsProperty('user', user))..add(DiagnosticsProperty('refreshToken', refreshToken));
+}
 
 
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
     return 'AppState(accessToken: $accessToken, tokenCreatedAt: $tokenCreatedAt, user: $user, refreshToken: $refreshToken)';
 }
 

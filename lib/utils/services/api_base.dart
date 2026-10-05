@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:project_tmp/utils/exceptions/error_from_server_exception.dart';
-import 'package:project_tmp/utils/helper/accessors.dart';
+import 'package:project_tmp/utils/helpers/accessors.dart';
 import 'package:project_tmp/utils/services/request_capture.dart';
 
 class Api {
@@ -157,7 +157,7 @@ class Api {
               _dio.options.headers.addAll({
                 Headers.contentTypeHeader: Headers.multipartFormDataContentType,
                 Headers.acceptHeader: Headers.jsonContentType,
-                'app-version': appState.actualVersion,
+                'app-version': appState.version,
               });
 
               Map<String, dynamic> formDataMap = {

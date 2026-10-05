@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:project_tmp/utils/helper/accessors.dart';
+import 'package:project_tmp/utils/helpers/accessors.dart';
 
 part 'setting.freezed.dart';
 part 'setting.g.dart';
@@ -32,5 +32,6 @@ abstract class Setting with _$Setting {
   void toggleDarkMode() => save();
 
   void notify() {
+
   }
 }

@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:decimal/decimal.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-import 'package:project_tmp/utils/helper/general.dart';
+import 'package:project_tmp/export.dart';
+
 extension ExtendNum on num {
   Gap get gap => Gap(toDouble());
 

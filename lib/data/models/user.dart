@@ -2,7 +2,7 @@
 
 import 'package:hive_ce/hive_ce.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:project_tmp/utils/helper/accessors.dart';
+import 'package:project_tmp/utils/helpers/accessors.dart';
 
 part 'user.freezed.dart';
 
