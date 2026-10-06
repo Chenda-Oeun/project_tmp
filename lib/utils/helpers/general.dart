@@ -32,7 +32,6 @@ Future<String> initAbsoluteTmpPath() async {
   return (await getTemporaryDirectory()).path;
 }
 
-
 Future<int?> getServerSpeedMs(String url, {int timeout = 10}) async {
   final uri = Uri.parse(url);
 
@@ -41,38 +40,44 @@ Future<int?> getServerSpeedMs(String url, {int timeout = 10}) async {
   try {
     Object? error;
     final completer = Completer();
-    final socket1 = Socket.connect(uri.host, 80).timeout(
-      Duration(seconds: timeout),
-    );
-    final socket2 = Socket.connect(uri.host, 443).timeout(
-      Duration(seconds: timeout),
-    );
-    socket1.then((socket) {
-      if (!completer.isCompleted) {
-        completer.complete();
-      }
-      socket.close();
-    }).catchError((e) {
-      if (error != null) {
-        if (!completer.isCompleted) {
-          completer.completeError(e);
-        }
-      }
-      error = e;
-    });
-    socket2.then((socket) {
-      if (!completer.isCompleted) {
-        completer.complete();
-      }
-      socket.close();
-    }).catchError((e) {
-      if (error != null) {
-        if (!completer.isCompleted) {
-          completer.completeError(e);
-        }
-      }
-      error = e;
-    });
+    final socket1 = Socket.connect(
+      uri.host,
+      80,
+    ).timeout(Duration(seconds: timeout));
+    final socket2 = Socket.connect(
+      uri.host,
+      443,
+    ).timeout(Duration(seconds: timeout));
+    socket1
+        .then((socket) {
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
+          socket.close();
+        })
+        .catchError((e) {
+          if (error != null) {
+            if (!completer.isCompleted) {
+              completer.completeError(e);
+            }
+          }
+          error = e;
+        });
+    socket2
+        .then((socket) {
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
+          socket.close();
+        })
+        .catchError((e) {
+          if (error != null) {
+            if (!completer.isCompleted) {
+              completer.completeError(e);
+            }
+          }
+          error = e;
+        });
     await completer.future;
     stopWatch.stop();
     speed = stopWatch.elapsed;
@@ -86,18 +91,16 @@ Future<int?> getServerSpeedMs(String url, {int timeout = 10}) async {
   return speed.inMilliseconds;
 }
 
-
-
 Future callApi(
-    FutureOr Function() request, {
-      bool loading = true,
-      bool showToast = true,
-      int durationSeconds = 3,
-      Function(Object error)? onError,
-      VoidCallback? onComplete,
-      String? loadingFullScreenTitle,
-      bool isLoadingFullScreen = false,
-    }) async {
+  FutureOr Function() request, {
+  bool loading = true,
+  bool showToast = true,
+  int durationSeconds = 3,
+  Function(Object error)? onError,
+  VoidCallback? onComplete,
+  String? loadingFullScreenTitle,
+  bool isLoadingFullScreen = false,
+}) async {
   try {
     if (loading) {
       /// TODO Implement loading style next
@@ -119,14 +122,12 @@ Future callApi(
       // toast(e, seconds: durationSeconds);
     }
   } finally {
-    if (loading){}
+    if (loading) {}
     //   hideLoading();
     print("COMPLETE");
     onComplete?.call();
   }
 }
-
-
 
 num numFromDynamicJson(dynamic data) {
   try {
@@ -139,7 +140,8 @@ num numFromDynamicJson(dynamic data) {
         // ErrorCaptureService.putError(e, stack: stackTrace);
         if (startNumRegEx.hasMatch(data)) {
           return num.parse(
-              startNumRegEx.firstMatch(data)!.group(0)!.replaceAll(',', ''));
+            startNumRegEx.firstMatch(data)!.group(0)!.replaceAll(',', ''),
+          );
         }
         rethrow;
       }
@@ -176,6 +178,7 @@ Color deserializeColor(dynamic colorData) {
     return Colors.transparent;
   }
 }
+
 int hexFromString(String hexString) {
   try {
     return int.parse(
@@ -187,4 +190,13 @@ int hexFromString(String hexString) {
     // ErrorCaptureService.putError(e, stack: stackTrace);
     return 0;
   }
+}
+
+Future postFrameCallback(FutureOr Function() callback) async {
+  final completer = Completer();
+  WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    await callback.call();
+    completer.complete();
+  });
+  await completer.future;
 }

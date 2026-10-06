@@ -1,33 +1,30 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:project_tmp/export.dart';
 
 part 'app_state.freezed.dart';
-part 'app_state.g.dart';
 
+part 'app_state.g.dart';
 
 @HiveType(typeId: 0)
 @unfreezedNoCopy
-
-
 // class AppState extends ChangeNotifier with _$
-abstract class AppState extends ChangeNotifier with _$AppState{
+abstract class AppState extends ChangeNotifier
+    with _$AppState {
   static const key = StorageKeys.appState;
 
-
   static late Locale _systemLanguage;
-  static Size? _screenSize;
+
   static late EdgeInsets _safePadding;
-  static late String _deviceId;
   static late BaseDeviceInfo _platformInfo;
   static late String _version;
   static late String _buildNumber;
@@ -36,9 +33,11 @@ abstract class AppState extends ChangeNotifier with _$AppState{
   static late String? _timeZone;
   static final List<String> _assets = [];
   static Completer? _introCompleter;
-  String get timeZone => _timeZone ?? DateTime.now().timeZoneName;
 
-
+  String get timeZone =>
+      _timeZone ?? DateTime
+          .now()
+          .timeZoneName;
 
   String get deviceName {
     return Platform.isIOS
@@ -56,7 +55,8 @@ abstract class AppState extends ChangeNotifier with _$AppState{
     /// TODO recheck  productName
     return Platform.isIOS
         ? (_platformInfo as IosDeviceInfo).utsname.sysname
-        : '${(_platformInfo as AndroidDeviceInfo).brand} ${(_platformInfo as AndroidDeviceInfo).model}';
+        : '${(_platformInfo as AndroidDeviceInfo)
+        .brand} ${(_platformInfo as AndroidDeviceInfo).model}';
   }
 
   String get systemVersion {
@@ -79,23 +79,18 @@ abstract class AppState extends ChangeNotifier with _$AppState{
 
   Locale get systemLanguage => _systemLanguage;
 
-
   EdgeInsets get safePadding => _safePadding;
 
   double get bottomSpace {
     return (_safePadding.bottom + (Platform.isAndroid ? 10 : 0));
   }
 
-  String get deviceId =>_deviceId;
-
-
   AppState._();
 
   factory AppState({
     @HiveField(0) String? accessToken,
-    @HiveField(1)
-    @JsonKey(fromJson: dateFromJson, toJson: dateToJson)
-    DateTime? tokenCreatedAt,
+    @HiveField(1) @JsonKey(
+        fromJson: dateFromJson, toJson: dateToJson) DateTime? tokenCreatedAt,
     @HiveField(2) User? user,
     @HiveField(3) String? refreshToken,
   }) = _AppState;
@@ -103,20 +98,16 @@ abstract class AppState extends ChangeNotifier with _$AppState{
   static Future _collectAllAssetPaths() async {
     final assetManifest = await AssetManifest.loadFromAssetBundle(rootBundle);
     _assets.clear();
-    _assets.addAll(assetManifest
-        .listAssets()
-        .where((string) => string.startsWith("assets/"))
-        .toList());
+    _assets.addAll(
+      assetManifest
+          .listAssets()
+          .where((string) => string.startsWith("assets/"))
+          .toList(),
+    );
   }
-
 
   static Future _fetchSystemLocale() async {
     _systemLanguage = PlatformDispatcher.instance.locale;
-  }
-
-  static void _updateScreenInfo(BuildContext context) {
-    _screenSize = MediaQuery.of(context).size;
-    _safePadding = MediaQuery.of(context).padding;
   }
 
   static Future _updateDeviceId() async {
@@ -134,13 +125,12 @@ abstract class AppState extends ChangeNotifier with _$AppState{
       }
       return null;
     }
-
-    _deviceId = await getId() ?? "";
   }
 
   static Future _updateTimeZone() async {
     /// TODO Check later
-    _timeZone = (await FlutterTimezone.getLocalTimezone()) as String?;
+    final tzInfo = await FlutterTimezone.getLocalTimezone();
+    _timeZone = tzInfo.identifier;
   }
 
   static Future _updatePlatformInfo() async {
@@ -154,7 +144,6 @@ abstract class AppState extends ChangeNotifier with _$AppState{
     _version = packageInfo.version;
     _buildNumber = packageInfo.buildNumber;
   }
-
 
   static Future loadGlobalValues() async {
     await Future.wait([
@@ -173,10 +162,6 @@ abstract class AppState extends ChangeNotifier with _$AppState{
     _absoluteTmpPathDirectory = await initAbsoluteTmpPath();
   }
 
-  static void loadContextBasedValues(BuildContext context) {
-    _updateScreenInfo(context);
-  }
-
   void notify() {
     notifyListeners();
   }
@@ -191,17 +176,12 @@ abstract class AppState extends ChangeNotifier with _$AppState{
     notifyListeners();
   }
 
-////
+
   Future resetAuth() async {
     accessToken = null;
     refreshToken = null;
     user = null;
     save();
-  }
-
-  Future resetAll() async {
-    accessToken = null;
-    await save();
   }
 
   factory AppState.fromStorage() {
@@ -217,46 +197,44 @@ abstract class AppState extends ChangeNotifier with _$AppState{
       _$AppStateFromJson(json);
 
   Future logout({bool needNotifyApi = true}) async {
-    callApi(
-      () async {
-        /// This code not work
-        // final mainContext = appRef.read(mainContextProvider).inner;
-        // final order = mainContext.currentOrder;
-        //
-        // if (order?.isPosPaid ?? false) {
-        //   mainContext.switchViewOrderDineIn(order!);
-        // } else {
-        //   order?.status = OrderStatus.pending;
-        // }
-        // appRef.read(viewingCartProvider.notifier).state = true;
-        // appRef.read(mainContextProvider).inner.notify();
-        //
-        // Future.delayed(Duration(seconds: 2));
+    callApi(() async {
+      /// This code not work
+      // final mainContext = appRef.read(mainContextProvider).inner;
+      // final order = mainContext.currentOrder;
+      //
+      // if (order?.isPosPaid ?? false) {
+      //   mainContext.switchViewOrderDineIn(order!);
+      // } else {
+      //   order?.status = OrderStatus.pending;
+      // }
+      // appRef.read(viewingCartProvider.notifier).state = true;
+      // appRef.read(mainContextProvider).inner.notify();
+      //
+      // Future.delayed(Duration(seconds: 2));
 
-        if (needNotifyApi) {
-          /// TODO call api logout before logout
-          // await AuthRepository.logout();
-        }
-        /// TODO Check before logout
-        // await onBeforeLogout();
-        appState.resetAuth();
-      },
-    );
+      if (needNotifyApi) {
+        /// TODO call api logout before logout
+        // await AuthRepository.logout();
+      }
+
+      /// TODO Check before logout
+      // await onBeforeLogout();
+      appState.resetAuth();
+    });
   }
 
   String? getAccessToken() {
     return accessToken;
   }
 
-  Future setToken(String token, String userId) async {
-    appState.accessToken = token;
+  Future setToken(String accessTk) async {
+    appState.accessToken = accessTk;
     appState.tokenCreatedAt = DateTime.now();
     await appState.save();
-    print("Just set token");
   }
 
-  Future setRefreshToken(String token, String userId) async {
-    appState.refreshToken = token;
+  Future setRefreshToken(String refreshTk) async {
+    appState.refreshToken = refreshTk;
     await appState.save();
   }
 
@@ -279,7 +257,6 @@ abstract class AppState extends ChangeNotifier with _$AppState{
       'absoluteTmpPathDirectory': absoluteTmpPathDirectory,
       'buildNumber': buildNumber,
       'systemLanguage': systemLanguage.toString(),
-      'deviceId': deviceId,
     };
   }
 }

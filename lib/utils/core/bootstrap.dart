@@ -1,12 +1,9 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
-import 'dart:math' as math;
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:scaled_app/scaled_app.dart';
 import 'package:stack_trace/stack_trace.dart';
-
 import 'package:project_tmp/export.dart';
 part 'bootstrap.g.dart';
 
@@ -35,7 +32,6 @@ void _registerHiveAdapters() {
 
 
 Future<void> _setUpHive() async {
-  print("Check hive box");
   final directory = await getApplicationSupportDirectory();
 
   await Hive.initFlutter(directory.path);
@@ -50,7 +46,7 @@ Future bootstrap() async {
   HttpOverrides.global = MyHttpOverrides();
 
   // if (Platform.isIOS) {
-  _scaleScreenDimension();
+  // _scaleScreenDimension();
   // }
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -84,18 +80,13 @@ Future bootstrap() async {
 //   }
 // }
 
-void _scaleScreenDimension() {
-  ScaledWidgetsFlutterBinding.ensureInitialized(
-    scaleFactor: (deviceSize) {
-      // screen width used in your UI design
-      // const widthOfDesign = 1500; //420.0;
-
-      final shortestSide = math.min(deviceSize.width, deviceSize.height);
-      ///TODO RECHECK
-      return shortestSide;
-      // isSmallDevice = shortestSide < 600;
-      // final widthOfDesign = isSmallDevice ? 420.0 : 1500.0;
-      // return math.min(deviceSize.width / widthOfDesign, 1);
-    },
-  );
-}
+// void _scaleScreenDimension() {
+//   ScaledWidgetsFlutterBinding.ensureInitialized(
+//     scaleFactor: (deviceSize) {
+//       if (deviceSize.width == 0 || deviceSize.height == 0) return 1.0;
+//       final shortestSide = math.min(deviceSize.width, deviceSize.height);
+//       final widthOfDesign = shortestSide < 600 ? 390.0 : 768.0;
+//       return shortestSide / widthOfDesign;
+//     },
+//   );
+// }

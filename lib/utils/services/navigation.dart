@@ -1,14 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:project_tmp/data/models/route_info.dart';
 
-enum PageTransitions {
-  cupertino,
-  fade,
-  slideUp,
-  slideDown,
-  none,
-}
+enum PageTransitions { cupertino, fade, slideUp, slideDown, none }
 
 class NavigationService {
   static final routeObserver = RouteObserver<ModalRoute>();
@@ -71,12 +66,9 @@ class NavigationService {
     );
 
     return (context != null ? Navigator.of(context) : state)
-        ?.pushAndRemoveUntil(
-      route,
-      (route) {
-        return false;
-      },
-    );
+        ?.pushAndRemoveUntil(route, (route) {
+          return false;
+        });
   }
 
   static Future pushReplacementUntilPageTypes(
@@ -95,46 +87,35 @@ class NavigationService {
     );
 
     return (context != null ? Navigator.of(context) : state)
-        ?.pushAndRemoveUntil(
-      route,
-      (route) {
-        final thisArgs = route.settings.arguments;
-        if (thisArgs is RouteInfo &&
-            types.contains(thisArgs.pageWidget.runtimeType)) {
-          return true;
-        }
-        return false;
-      },
-    );
+        ?.pushAndRemoveUntil(route, (route) {
+          final thisArgs = route.settings.arguments;
+          if (thisArgs is RouteInfo &&
+              types.contains(thisArgs.pageWidget.runtimeType)) {
+            return true;
+          }
+          return false;
+        });
   }
 
-  static Future<bool> hasDialog({
-    BuildContext? context,
-  }) async {
+  static Future<bool> hasDialog({BuildContext? context}) async {
     final completer = Completer<bool>();
-    (context != null ? Navigator.of(context) : state)?.popUntil(
-      (route) {
-        final thisArgs = route.settings.arguments;
-        completer.complete(thisArgs is RouteInfo && thisArgs.isDialog);
-        return true;
-      },
-    );
+    (context != null ? Navigator.of(context) : state)?.popUntil((route) {
+      final thisArgs = route.settings.arguments;
+      completer.complete(thisArgs is RouteInfo && thisArgs.isDialog);
+      return true;
+    });
     return await completer.future;
   }
 
-  static clearDialogs({
-    BuildContext? context,
-  }) {
-    (context != null ? Navigator.of(context) : state)?.popUntil(
-      (route) {
-        final thisArgs = route.settings.arguments;
-        if (thisArgs is RouteInfo && thisArgs.isDialog) {
-          return false;
-        } else {
-          return true;
-        }
-      },
-    );
+  static clearDialogs({BuildContext? context}) {
+    (context != null ? Navigator.of(context) : state)?.popUntil((route) {
+      final thisArgs = route.settings.arguments;
+      if (thisArgs is RouteInfo && thisArgs.isDialog) {
+        return false;
+      } else {
+        return true;
+      }
+    });
   }
 
   static Future popUntilPageTypes({
@@ -143,33 +124,30 @@ class NavigationService {
     bool closeAllDialogs = false,
     bool alsoReplaceTargetPage = false,
   }) async {
-
     var found = false;
 
-    return (context != null ? Navigator.of(context) : state)?.popUntil(
-      (route) {
-        if (found) {
+    return (context != null ? Navigator.of(context) : state)?.popUntil((route) {
+      if (found) {
+        return true;
+      }
+
+      final thisArgs = route.settings.arguments;
+      if (thisArgs is RouteInfo &&
+          types.contains(thisArgs.pageWidget.runtimeType)) {
+        if ((closeAllDialogs || alsoReplaceTargetPage) && thisArgs.isDialog) {
+          return false;
+        }
+        if (alsoReplaceTargetPage && !thisArgs.isDialog) {
+          if (!found) {
+            found = true;
+          }
+        } else {
           return true;
         }
+      }
 
-        final thisArgs = route.settings.arguments;
-        if (thisArgs is RouteInfo &&
-            types.contains(thisArgs.pageWidget.runtimeType)) {
-          if ((closeAllDialogs || alsoReplaceTargetPage) && thisArgs.isDialog) {
-            return false;
-          }
-          if (alsoReplaceTargetPage && !thisArgs.isDialog) {
-            if (!found) {
-              found = true;
-            }
-          } else {
-            return true;
-          }
-        }
-
-        return false;
-      },
-    );
+      return false;
+    });
   }
 
   static Future pushReplacementUntilName(
@@ -188,13 +166,10 @@ class NavigationService {
     );
 
     return (context != null ? Navigator.of(context) : state)
-        ?.pushAndRemoveUntil(
-      route,
-      (route) {
-        final routeName = route.settings.name;
-        return routeName == untilName;
-      },
-    );
+        ?.pushAndRemoveUntil(route, (route) {
+          final routeName = route.settings.name;
+          return routeName == untilName;
+        });
   }
 
   static Future<T?> pushReplacement<T extends Object?, U>(
@@ -213,10 +188,7 @@ class NavigationService {
     );
 
     return await (context != null ? Navigator.of(context) : state)
-        ?.pushReplacement<T, U>(
-      route,
-      result: result,
-    );
+        ?.pushReplacement<T, U>(route, result: result);
   }
 
   static Future<T?> push<T extends Object?>(
@@ -254,21 +226,13 @@ class NavigationService {
 
     switch (transition) {
       case PageTransitions.fade:
-        // return PageRouteBuilder(
-        //   pageBuilder: (context, anim1, anim2) {
-        //     return FadeTransition(
-        //       opacity: anim1,
-        //       child: nextPage,
-        //     );
-        //   },
-        //   settings: routeSettings,
-        //   transitionDuration: const Duration(milliseconds: 300),
-        //   reverseTransitionDuration: const Duration(milliseconds: 300),
-        // );
-        return CupertinoDialogRoute(
-          context: context,
-          builder: (context) => nextPage,
+        return PageRouteBuilder<T>(
+          pageBuilder: (context, anim1, anim2) {
+            return FadeTransition(opacity: anim1, child: nextPage);
+          },
           settings: routeSettings,
+          transitionDuration: const Duration(milliseconds: 300),
+          reverseTransitionDuration: const Duration(milliseconds: 300),
         );
       case PageTransitions.slideUp:
         return PageRouteBuilder(

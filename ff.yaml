@@ -1,0 +1,23 @@
+asset:
+  class:
+    path: lib/utils/constants/assets.dart
+    name: AppAssets
+  paths:
+    - assets/images/*
+    - assets/audios/*
+    - assets/lottie/*
+    - assets/videos/*
+    - assets/rives/*
+
+locale:
+  path: lib/data/locales/locale.dart
+  languages:
+    - en_US
+    - zh_CN
+    - zh_TW
+    - km_KH
+    - vi_VN
+
+change_logs:
+  1.0.0:
+    - Initial new version

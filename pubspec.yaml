@@ -49,7 +49,6 @@ dependencies:
   device_info_plus: ^13.2.0
   flutter_timezone: ^5.1.0
   path_provider: ^2.1.6
-  scaled_app: ^2.3.2
 
 dev_dependencies:
   flutter_test:
