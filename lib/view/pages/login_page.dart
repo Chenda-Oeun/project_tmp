@@ -158,9 +158,9 @@ class _LoginPageState extends State<LoginPage>
     appState.setToken("token");
     appState.setToken("access_token");
     appState.user = User(
-      id: "09234342",
+      id: _phoneController.text,
       name: "OEUN Chenda",
-      phoneNumber: "096261712",
+      phoneNumber: _phoneController.text,
     );
     appState.save();
 

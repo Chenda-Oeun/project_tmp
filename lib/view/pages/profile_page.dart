@@ -83,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '+1 (555) 234-5678',
+                          appState.user?.phoneNumber ?? '',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(
                               alpha: 0.6,
